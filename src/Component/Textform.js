@@ -24,8 +24,10 @@ export default function (props) {
   return (
     <div>
       <div className="container">
-        <h1></h1>
-        <div id="liveAlertPlaceholder"></div>
+      <div className="row">
+        <h2>Text Editor</h2>
+      </div>
+        
         <div className="row">
           <div className="col-md-12">
             <textarea name="mybox" id="mybox" onChange={myboxonChange} rows="8" cols="100" value={title}></textarea>

@@ -6,6 +6,9 @@ import About from "./Component/About";
 import NewsList from "./Component/NewsList";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react"; 
+import SignUp from "./Component/SignUp";
+import Login from "./Component/Login";
+import Logout from "./Component/Logout";
 
 function App() {
 
@@ -23,7 +26,7 @@ function App() {
     ].join('');
     
     alertPlaceholder.append(wrapper);
-    document.querySelector('#liveAlertPlaceholder').scrollIntoView({
+    document.querySelector('.navbar').scrollIntoView({
       behavior: 'smooth'
     });
 
@@ -32,16 +35,25 @@ function App() {
     }, 3000);
   }
 
+
+  // checkUserAccess();
+
   return (
     <div className="App"> 
       <Router>
         <Navbar title="Text Utils"></Navbar>
-        
-        <Routes>
-          <Route exact path="/"  element={<Textform appendAlert={appendAlert} />} ></Route>
-          <Route exact path="about"  element={<About/>} ></Route>
-          <Route exact path="news-monkey"  element={<NewsList pageSize={10} />} ></Route>
-        </Routes>
+        <div className="container">  
+        <div id="liveAlertPlaceholder" class="my-3"></div>
+          <Routes>
+            <Route exact path="/" element={<Textform appendAlert={appendAlert} />} ></Route>
+            <Route exact path="about" element={<About/>} ></Route>
+            {/* checkUserAccess={checkUserAccess} */}
+            <Route exact path="news-monkey" element={<NewsList pageSize={10}  />} ></Route>
+            <Route exact path="signup" element={<SignUp appendAlert={appendAlert} />} ></Route>
+            <Route exact path="login" element={<Login appendAlert={appendAlert} />} ></Route>
+            <Route exact path="logout" element={<Logout />} ></Route>
+          </Routes>
+        </div>
       </Router>
     </div>
   );

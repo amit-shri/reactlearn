@@ -1,0 +1,13 @@
+.error-required {color:red;font-size: 13px;}
+.form-group label{font-weight: 600;}
+
+/* App.css */
+.nav-link {
+  padding: 0.5rem 1rem; /* Adjust padding as needed */
+}
+
+.nav-link.active {
+  background-color: #cbcbcb; /* Highlight color */
+  color: #fff; /* Text color when active */
+  border-radius: 0.25rem; /* Optional: add some border-radius for rounded corners */
+}

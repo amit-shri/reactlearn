@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
 import Loader from "./Loader";
 import DefaultImage from './256px-DefaultImage.jpg'
+import { useNavigate } from "react-router-dom";
 
 export default function NewsList(props) {
 
@@ -9,8 +10,10 @@ export default function NewsList(props) {
   const [totalArticles, settotalArticles] = useState(0);
   const [Loading, setLoading] = useState(false)
   const [Articles, setArticles] = useState({});
+  const navigate = useNavigate();
 
   const fetchData = async () => {
+    // console.log("Fetch data called");
     try {
       let url =
         `https://newsapi.org/v2/top-headlines?country=in&apiKey=5bb98992a41d4aa78795974b9ba6eaa8&pageSize=${props.pageSize}&page=${page}`;
@@ -29,26 +32,41 @@ export default function NewsList(props) {
   };
 
   const handlePreviousClick = () => {
-    //  alert("previous clicked");
     setPage(page - 1);
   }
-
   
   const handleNextClick = () => {
-    //    alert("next clicked");
     setPage(page + 1);
-    
   }
 
-
-  
   useEffect(() => {
+
+    // const verifyAccess = async () => {
+    //   try {
+    //     let access = await props.checkUserAccess();
+    //     console.log('Access:', access);
+    //     if (access) {
+    //       fetchData(); // Fetch your data if access is granted
+    //     } else {
+    //       navigate("/"); // Redirect to the home page if access is denied
+    //     }
+    //   } catch (error) {
+    //     console.error('Error checking access:', error);
+    //     navigate("/"); // Redirect to the home page in case of an error
+    //   }
+    // };
+
+    // verifyAccess(); // Call the async function inside useEffect
+    
     fetchData();
+
   }, [page]);
 
   return (
     <div className="container my-3">
-         
+         <div className="row">
+          <h2>News Monkey</h2>
+        </div>
          {Loading && <Loader/>}
          <div>
             <div className="d-flex my-3 justify-content-between">
