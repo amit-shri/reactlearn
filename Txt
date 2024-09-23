@@ -1,0 +1,68 @@
+To handle empty date fields in XML using the JMS Serializer in Symfony 2, you can customize the `DateHandler` or create your own handler to handle empty date values gracefully. By default, JMS Serializer expects valid date strings, and if it encounters an empty value, it will throw an exception. You need to adjust the deserialization process to account for this.
+
+Here's how you can handle this:
+
+### Steps:
+
+1. **Create a Custom DateHandler:**
+   You can extend the default `DateHandler` and modify it to handle empty date values. This handler will check if the date string is empty before attempting to parse it.
+
+2. **Register the Custom DateHandler in JMS Serializer:**
+   After creating the custom handler, you need to register it in the JMS Serializer configuration.
+
+### Example of Custom DateHandler:
+
+```php
+namespace App\Handler;
+
+use JMS\Serializer\Handler\DateHandler;
+use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\XmlDeserializationVisitor;
+use JMS\Serializer\Context;
+use DateTime;
+
+class CustomDateHandler extends DateHandler
+{
+    public function deserializeDateFromXml(XmlDeserializationVisitor $visitor, $data, array $type, Context $context)
+    {
+        // Check if the date is empty
+        if (empty($data)) {
+            return null;  // or return a default value like new DateTime() if needed
+        }
+
+        // Otherwise, use the default deserialization process
+        return parent::deserializeDateFromXml($visitor, $data, $type, $context);
+    }
+
+    public function deserializeDateFromJson(JsonDeserializationVisitor $visitor, $data, array $type, Context $context)
+    {
+        // Handle empty date in JSON as well
+        if (empty($data)) {
+            return null;
+        }
+
+        return parent::deserializeDateFromJson($visitor, $data, $type, $context);
+    }
+}
+```
+
+### Step 2: Register the Custom Handler
+
+You can register the custom handler in your services configuration (YAML or XML).
+
+```yaml
+# config/services.yml
+services:
+    app.custom_date_handler:
+        class: App\Handler\CustomDateHandler
+        arguments: ['%jms_serializer.serialization.timezone%', '%jms_serializer.serialization.format%', '%jms_serializer.deserialization.timezone%']
+        tags:
+            - { name: jms_serializer.handler, type: date, direction: deserialization, format: xml }
+            - { name: jms_serializer.handler, type: date, direction: deserialization, format: json }
+```
+
+### Explanation:
+- **CustomDateHandler**: It overrides the default behavior to check if the date field is empty. If it is, it returns `null`, otherwise, it delegates to the parent `DateHandler`.
+- **Service Registration**: The custom date handler is registered as a JMS serializer handler for both XML and JSON formats during deserialization.
+
+This will allow you to handle empty date fields in XML without throwing an exception. If you want to provide a default date (e.g., `new \DateTime()`), you can adjust the `null` return value accordingly.
